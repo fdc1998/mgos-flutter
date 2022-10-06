@@ -38,6 +38,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   learning_text_recognition: ^0.0.4
   provider: ^6.0.3
+  google_fonts: ^3.0.1
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_test:
