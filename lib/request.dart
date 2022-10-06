@@ -3,99 +3,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'dart:io'; // for using HttpClient
 import 'dart:convert';
-import 'dart:developer';
 
 void main() {
   runApp(const MyApp());
-}
-
-
-// Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
-//
-// String welcomeToJson(Welcome data) => json.encode(data.toJson());
-
-class Welcome {
-  Welcome({
-    required this.data,
-    required this.id,
-    required this.msg,
-    required this.estrutura,
-    required this.estruturaDescricao,
-    required this.osAssuntoId,
-    required this.assunto,
-    required this.endereco,
-    required this.bairro,
-    required this.cidade,
-    required this.complemento,
-    required this.referencia,
-    required this.razao,
-    required this.cnpjCpf,
-    required this.contratoStatus,
-    required this.loginStatus,
-    required this.login,
-    required this.senha,
-  });
-
-  String data;
-  String id;
-  String msg;
-  String estrutura;
-  String estruturaDescricao;
-  String osAssuntoId;
-  String assunto;
-  String endereco;
-  String bairro;
-  String cidade;
-  String complemento;
-  String referencia;
-  String razao;
-  String cnpjCpf;
-  String contratoStatus;
-  String loginStatus;
-  String login;
-  String senha;
-
-  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
-    data: json["data"] == null ? null : json["data"],
-    id: json["id"] == null ? null : json["id"],
-    msg: json["msg"] == null ? null : json["msg"],
-    estrutura: json["estrutura"] == null ? null : json["estrutura"],
-    estruturaDescricao: json["estrutura_descricao"] == null ? null : json["estrutura_descricao"],
-    osAssuntoId: json["os_assunto_id"] == null ? null : json["os_assunto_id"],
-    assunto: json["assunto"] == null ? null : json["assunto"],
-    endereco: json["endereco"] == null ? null : json["endereco"],
-    bairro: json["bairro"] == null ? null : json["bairro"],
-    cidade: json["cidade"] == null ? null : json["cidade"],
-    complemento: json["complemento"] == null ? null : json["complemento"],
-    referencia: json["referencia"] == null ? null : json["referencia"],
-    razao: json["razao"] == null ? null : json["razao"],
-    cnpjCpf: json["cnpj_cpf"] == null ? null : json["cnpj_cpf"],
-    contratoStatus: json["contrato_status"] == null ? null : json["contrato_status"],
-    loginStatus: json["login_status"] == null ? null : json["login_status"],
-    login: json["login"] == null ? null : json["login"],
-    senha: json["senha"] == null ? null : json["senha"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "data": data == null ? null : data,
-    "id": id == null ? null : id,
-    "msg": msg == null ? null : msg,
-    "estrutura": estrutura == null ? null : estrutura,
-    "estrutura_descricao": estruturaDescricao == null ? null : estruturaDescricao,
-    "os_assunto_id": osAssuntoId == null ? null : osAssuntoId,
-    "assunto": assunto == null ? null : assunto,
-    "endereco": endereco == null ? null : endereco,
-    "bairro": bairro == null ? null : bairro,
-    "cidade": cidade == null ? null : cidade,
-    "complemento": complemento == null ? null : complemento,
-    "referencia": referencia == null ? null : referencia,
-    "razao": razao == null ? null : razao,
-    "cnpj_cpf": cnpjCpf == null ? null : cnpjCpf,
-    "contrato_status": contratoStatus == null ? null : contratoStatus,
-    "login_status": loginStatus == null ? null : loginStatus,
-    "login": login == null ? null : login,
-    "senha": senha == null ? null : senha,
-  };
 }
 
 
@@ -128,17 +38,17 @@ class _HomePageState extends State<HomePage> {
   
   Icon invalidOs (List index) {
     if ((!OS_STATUS.contains(index[0]) || !OS_STATUS.contains(index[1])) && index[2] != "5") {
-      return Icon(Icons.report_problem, size: 40);
+      return const Icon(Icons.report_problem, size: 40);
     } else if (['50', "19", "13"].contains(index[2])) {
-      return Icon(Icons.router, size: 40, color: Colors.cyan);
+      return const Icon(Icons.router, size: 40, color: Colors.cyan);
     } else if (index[2] == "1") {
-      return Icon(Icons.assignment, size: 40, color: Colors.green);
+      return const Icon(Icons.assignment, size: 40, color: Colors.green);
     } else if (["10", "11"].contains(index[2])) {
-      return Icon(Icons.published_with_changes, size: 40, color: Colors.deepPurple);
+      return const Icon(Icons.published_with_changes, size: 40, color: Colors.deepPurple);
     } else if (["44", "5"].contains(index[2])) {
-      return Icon(Icons.recycling, size: 40, color: Colors.amber);
+      return const Icon(Icons.recycling, size: 40, color: Colors.amber);
     }
-    return Icon(Icons.build, size: 40, color: Colors.red);
+    return const Icon(Icons.build, size: 40, color: Colors.red);
   }
 
   Color colorOs (List index) {
@@ -154,8 +64,9 @@ class _HomePageState extends State<HomePage> {
       return Colors.deepOrangeAccent;
     } else if (["44", "5"].contains(index[2])) {
       return Colors.amber;
+    } else {
+      return Colors.black;
     }
-    return Colors.black;;
   }
 
   Future<void> _fetchData() async {
@@ -210,9 +121,6 @@ class _HomePageState extends State<HomePage> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
-                final status_contract = snapshot.data[index]['contrato_status'];
-                final status_login = snapshot.data[index]['login_status'];
-                final assunto_id = snapshot.data[index]['os_assunto_id'];
                 
                 return Card(
                   child: ListTile(
