@@ -1,98 +1,15 @@
-// main.dart
 import 'dart:core';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'dart:io'; // for using HttpClient
 import 'dart:convert';
+import '../model/osModel.dart';
+import 'osdetail.dart';
 
-class OSs {
-  OSs({
-    required this.data,
-    required this.id,
-    required this.msg,
-    required this.estrutura,
-    required this.estruturaDescricao,
-    required this.osAssuntoId,
-    required this.assunto,
-    required this.endereco,
-    required this.bairro,
-    required this.cidade,
-    required this.complemento,
-    required this.referencia,
-    required this.razao,
-    required this.cnpjCpf,
-    required this.contratoStatus,
-    required this.loginStatus,
-    required this.login,
-    required this.senha,
-  });
-
-  String data;
-  String id;
-  String msg;
-  String estrutura;
-  String estruturaDescricao;
-  String osAssuntoId;
-  String assunto;
-  String endereco;
-  String bairro;
-  String cidade;
-  String complemento;
-  String referencia;
-  String razao;
-  String cnpjCpf;
-  String contratoStatus;
-  String loginStatus;
-  String login;
-  String senha;
-
-  factory OSs.fromJson(Map<String, dynamic> json) => OSs(
-    data: json["data"],
-    id: json["id"],
-    msg: json["msg"],
-    estrutura: json["estrutura"],
-    estruturaDescricao: json["estrutura_descricao"],
-    osAssuntoId: json["os_assunto_id"],
-    assunto: json["assunto"],
-    endereco: json["endereco"],
-    bairro: json["bairro"],
-    cidade: json["cidade"],
-    complemento: json["complemento"],
-    referencia: json["referencia"],
-    razao: json["razao"],
-    cnpjCpf: json["cnpj_cpf"],
-    contratoStatus: json["contrato_status"],
-    loginStatus: json["login_status"],
-    login: json["login"],
-    senha: json["senha"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "data": data,
-    "id": id,
-    "msg": msg,
-    "estrutura": estrutura,
-    "estrutura_descricao": estruturaDescricao,
-    "os_assunto_id": osAssuntoId,
-    "assunto": assunto,
-    "endereco": endereco,
-    "bairro": bairro,
-    "cidade": cidade,
-    "complemento": complemento,
-    "referencia": referencia,
-    "razao": razao,
-    "cnpj_cpf": cnpjCpf,
-    "contrato_status": contratoStatus,
-    "login_status": loginStatus,
-    "login": login,
-    "senha": senha,
-  };
-}
-
-
-Future<List<OSs>> _fetchData() async {
+Future<List<OSs>> fetchData() async {
   List<OSs> oSsFromJson(String str) => List<OSs>.from(json.decode(str).map((x) => OSs.fromJson(x)));
 
-  const apiUrl = 'http://apis.grupomg.net.br:8000/get_oss/108';
+  const apiUrl = 'http://apis.grupomg.net.br:8000/get_oss/76';
 
   HttpClient client = HttpClient();
   client.autoUncompress = true;
@@ -147,11 +64,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   List<String> OS_STATUS = ["A", "FA"];
 
   Icon invalidOs (List index) {
     if ((!OS_STATUS.contains(index[0]) || !OS_STATUS.contains(index[1])) && index[2] != "5") {
-      return const Icon(Icons.report_problem, size: 40);
+      return const Icon(Icons.report_problem, size: 40, color: Colors.black);
     } else if (['50', "19", "13"].contains(index[2])) {
       return const Icon(Icons.router, size: 40, color: Colors.cyan);
     } else if (index[2] == "1") {
@@ -164,9 +82,17 @@ class _HomePageState extends State<HomePage> {
     return const Icon(Icons.build, size: 40, color: Colors.red);
   }
 
+  Color colorTile (List index) {
+    if ((!OS_STATUS.contains(index[0]) || !OS_STATUS.contains(index[1])) && index[2] != "5") {
+      return Colors.yellow;
+  } else {
+      return Colors.white;
+    }
+  }
+
   Color colorOs (List index) {
     if ((!OS_STATUS.contains(index[0]) || !OS_STATUS.contains(index[1])) && index[2] != "5") {
-      return Colors.red;
+      return Colors.black;
     } else if (["50", "19", "13"].contains(index[2])) {
       return Colors.cyan;
     } else if (index[2] == "1") {
@@ -204,28 +130,29 @@ class _HomePageState extends State<HomePage> {
           )
       ),
       body:FutureBuilder(
-        future: _fetchData(),
+        future: fetchData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
-
+                
                 return Card(
                   child: ListTile(
+                    tileColor: colorTile([snapshot.data[index].contratoStatus, snapshot.data[index].loginStatus, snapshot.data[index].osAssuntoId]),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => OsDetail(detail: snapshot.data[index])),
                         );
                       },
-                      title: Text(snapshot.data[index]['assunto'].toUpperCase(), style: TextStyle(
+                      title: Text(snapshot.data[index].assunto.toUpperCase(), style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: colorOs([snapshot.data[index]['contrato_status'], snapshot.data[index]['login_status'], snapshot.data[index]['os_assunto_id']]),
+                        fontSize: 18,
+                        color: colorOs([snapshot.data[index].contratoStatus, snapshot.data[index].loginStatus, snapshot.data[index].osAssuntoId]),
                       ),
                       ),
-                      leading: invalidOs([snapshot.data[index]['contrato_status'], snapshot.data[index]['login_status'], snapshot.data[index]['os_assunto_id']]),
+                      leading: invalidOs([snapshot.data[index].contratoStatus, snapshot.data[index].loginStatus, snapshot.data[index].osAssuntoId]),
                       subtitle: RichText(
                         text: TextSpan(
                             style: const TextStyle(
@@ -233,19 +160,19 @@ class _HomePageState extends State<HomePage> {
                             ),
                             children: [
                               TextSpan(
-                                  text: snapshot.data[index]['razao'],
+                                  text: snapshot.data[index].razao,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )
                               ),
                               TextSpan(
-                                  text: '\n${snapshot.data[index]['endereco']}',
+                                  text: '\n${snapshot.data[index].endereco}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.normal,
                                   )
                               ),
                               TextSpan(
-                                text: '\n${snapshot.data[index]['bairro']} - ${snapshot.data[index]['cidade']}',
+                                text: '\n${snapshot.data[index].bairro} - ${snapshot.data[index].cidade}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.normal,
                                 ),
@@ -269,21 +196,3 @@ class _HomePageState extends State<HomePage> {
 }
 
 
-class OsDetail extends StatelessWidget {
-  OsDetail({Key? key, required this.detail}) : super(key: key);
-  final Map detail;
-
-  @override
-  Widget build(BuildContext context) {
-    // Use the Todo to create the UI.
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('O.S. ${detail['id']}'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(detail['msg']),
-      ),
-    );
-  }
-}
