@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../model/osModel.dart';
-import 'osinstall.dart';
+import 'package:camera/camera.dart';
+
+import 'osExec.dart';
+
 
 class OsDetail extends StatelessWidget {
   OsDetail({Key? key, required this.detail}) : super(key: key);
@@ -30,7 +31,7 @@ class OsDetail extends StatelessWidget {
                 label: Text("INICIAR OS"), onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OsInstall()),
+                  MaterialPageRoute(builder: (context) => OsExec(detail: detail)),
                 );
               },
               )
@@ -44,9 +45,8 @@ class OsDetail extends StatelessWidget {
 Widget temP(OSs os) {
   List<String> OS_STATUS = ["A", "FA"];
   final Map Detail;
-  Detail = os.toJson();
-  print(Detail);
 
+  Detail = os.toJson();
 
   if ((!OS_STATUS.contains(os.contratoStatus) || !OS_STATUS.contains(os.loginStatus)) && os.osAssuntoId != "5") {
     return Padding(

@@ -1,10 +1,12 @@
 import 'dart:core';
 import 'dart:ui';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:io'; // for using HttpClient
 import 'dart:convert';
 import '../model/osModel.dart';
 import 'osdetail.dart';
+
 
 Future<List<OSs>> fetchData() async {
   List<OSs> oSsFromJson(String str) => List<OSs>.from(json.decode(str).map((x) => OSs.fromJson(x)));
@@ -34,10 +36,13 @@ Future<List<OSs>> fetchData() async {
   }
 }
 
-void main() {
+late List<CameraDescription> _cameras;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _cameras = await availableCameras();
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

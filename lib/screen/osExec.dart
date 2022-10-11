@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../model/osModel.dart';
-import 'osdetail.dart';
+import 'osinstall.dart';
+
+
+
 
 class OsExec extends StatelessWidget {
   OsExec({Key? key, required this.detail}) : super(key: key);
@@ -14,7 +15,7 @@ class OsExec extends StatelessWidget {
       appBar: AppBar(
         title: Text('O.S. ${detail.id}'),
       ),
-      body: temP(detail),
+      body: OsInstall(),
     );
   }
 }

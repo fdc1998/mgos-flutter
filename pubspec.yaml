@@ -41,6 +41,7 @@ dependencies:
   google_fonts: ^3.0.1
   hexcolor: ^3.0.1
   fluttertoast: ^8.0.9
+  camera: ^0.9.8+1
 
 dev_dependencies:
   flutter_test:
