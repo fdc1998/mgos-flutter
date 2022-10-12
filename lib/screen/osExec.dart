@@ -15,7 +15,7 @@ class OsExec extends StatelessWidget {
       appBar: AppBar(
         title: Text('O.S. ${detail.id}'),
       ),
-      body: OsInstall(),
+      body: OsInstall(detail: detail),
     );
   }
 }
