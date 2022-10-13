@@ -7,6 +7,8 @@ import 'dart:convert';
 import '../model/osModel.dart';
 import 'osdetail.dart';
 
+List<CameraDescription> cameras = [];
+
 
 Future<List<OSs>> fetchData() async {
   List<OSs> oSsFromJson(String str) => List<OSs>.from(json.decode(str).map((x) => OSs.fromJson(x)));
@@ -39,8 +41,12 @@ Future<List<OSs>> fetchData() async {
 late List<CameraDescription> _cameras;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  _cameras = await availableCameras();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    print('Error in fetching the cameras: $e');
+  }
   runApp(const MyApp());
 }
 
