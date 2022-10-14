@@ -13,7 +13,7 @@ List<CameraDescription> cameras = [];
 Future<List<OSs>> fetchData() async {
   List<OSs> oSsFromJson(String str) => List<OSs>.from(json.decode(str).map((x) => OSs.fromJson(x)));
 
-  const apiUrl = 'http://apis.grupomg.net.br:8000/get_oss/76';
+  const apiUrl = 'http://apis.grupomg.net.br:8000/get_oss/108';
 
   HttpClient client = HttpClient();
   client.autoUncompress = true;

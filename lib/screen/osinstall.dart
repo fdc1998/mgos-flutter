@@ -1,6 +1,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import '../model/osModel.dart';
 import '../screen/oss.dart';
 import 'dart:async';
@@ -85,6 +86,7 @@ Widget button(IconData icon, Alignment alignment ) {
     child: Container (
         margin: const EdgeInsets.only(
             left: 20,
+            right: 20,
             bottom: 20
         ),
         height: 50,
@@ -102,11 +104,10 @@ Widget button(IconData icon, Alignment alignment ) {
         ),
         child: const Center (
             child: Icon(
-                Icons.flip_camera_ios_outlined,
+                Icons.camera_alt_outlined,
                 color: Colors.black54
             )
         )
-
     ),
   );
 }
@@ -122,14 +123,44 @@ class OsInstall extends StatefulWidget {
 
 class _OsInstallState extends State<OsInstall> {
   late String _imageToShow;
+  String? image_file;
+
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    print(directory.toString());
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    print(path.toString());
+    return File('$path/empty-image.png');
+  }
+
+  Future<String> readCounter() async {
+    final file = await _localFile;
+    print(file.path);
+      // return int.parse(contents);
+    return file.path;
+  }
+
   @override
   initState(){
-    _imageToShow = '/data/user/0/com.mgnet.mgos.mgos/cache/CAP9053197934322498008.jpg';
+    // image_file = readCounter() as String?;
+    _imageToShow = '/data/user/0/com.mgnet.mgos.mgos/app_flutter/empty-image.png';
+    // readCounter().then((value) {
+    //   setState(() {
+    //     image_file = value;
+    //     print(image_file);
+    //   });
+    // });
   }
+
 
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: EdgeInsets.all(20),
           children: [
             Center (
               child:
@@ -141,13 +172,12 @@ class _OsInstallState extends State<OsInstall> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child:
-                      Image.file(File(_imageToShow),
-                      ),
+                      Image.file(File(_imageToShow)),
                     ),
                     ElevatedButton.icon(
                         icon: Icon(Icons.camera, size: 18),
                         label: Text("CTO"), onPressed: () {
-                      _navigateAndDisplaySelection(context);
+                      _navigateAndDisplaySelection(context, "cto");
                     }
                     ),
                     ClipRRect(
@@ -158,8 +188,7 @@ class _OsInstallState extends State<OsInstall> {
                     ),
                     ElevatedButton.icon(
                       icon: Icon(Icons.camera, size: 18),
-                      label: Text("SINAL CTO"), onPressed: () {
-                    },
+                      label: Text("SINAL CTO"), onPressed: (){},
                     ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
@@ -201,7 +230,7 @@ class _OsInstallState extends State<OsInstall> {
         );
   }
 
-  Future<void> _navigateAndDisplaySelection(BuildContext context) async {
+  Future<void> _navigateAndDisplaySelection(BuildContext context, String name) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CamPreview()),
@@ -211,6 +240,6 @@ class _OsInstallState extends State<OsInstall> {
     setState ((){
       _imageToShow = result;
     });
-    print('Get path image ${result}');
+    print('Get path image ${result}, ${name}');
   }
 }
