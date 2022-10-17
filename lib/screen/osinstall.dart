@@ -123,31 +123,34 @@ class OsInstall extends StatefulWidget {
 
 class _OsInstallState extends State<OsInstall> {
   late String _imageToShow;
-  String? image_file;
+  late String _cto_img;
+  late String _cto_sig_img;
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    print(directory.toString());
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    print(path.toString());
-    return File('$path/empty-image.png');
-  }
-
-  Future<String> readCounter() async {
-    final file = await _localFile;
-    print(file.path);
-      // return int.parse(contents);
-    return file.path;
-  }
+  // Future<String> get _localPath async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   print(directory.toString());
+  //   return directory.path;
+  // }
+  //
+  // Future<File> get _localFile async {
+  //   final path = await _localPath;
+  //   print(path.toString());
+  //   return File('$path/empty-image.png');
+  // }
+  //
+  // Future<String> readCounter() async {
+  //   final file = await _localFile;
+  //   print(file.path);
+  //     // return int.parse(contents);
+  //   return file.path;
+  // }
 
   @override
   initState(){
     // image_file = readCounter() as String?;
-    _imageToShow = '/data/user/0/com.mgnet.mgos.mgos/app_flutter/empty-image.png';
+    // _imageToShow = '/data/user/0/com.mgnet.mgos.mgos/app_flutter/empty-image.png';
+    _cto_sig_img = '';
+    _cto_img = '';
     // readCounter().then((value) {
     //   setState(() {
     //     image_file = value;
@@ -172,7 +175,7 @@ class _OsInstallState extends State<OsInstall> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child:
-                      Image.file(File(_imageToShow)),
+                      img(_cto_img),
                     ),
                     ElevatedButton.icon(
                         icon: Icon(Icons.camera, size: 18),
@@ -183,12 +186,14 @@ class _OsInstallState extends State<OsInstall> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child:
-                      Image.asset('assets/images/empty-image.png',
-                      ),
+                      img(_cto_sig_img),
                     ),
                     ElevatedButton.icon(
                       icon: Icon(Icons.camera, size: 18),
-                      label: Text("SINAL CTO"), onPressed: (){},
+                      label: Text("SINAL CTO"), onPressed: (){
+                      _navigateAndDisplaySelection(context, "cto_sig");
+
+                    },
                     ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
@@ -238,8 +243,19 @@ class _OsInstallState extends State<OsInstall> {
     if (!mounted) return;
     _imageToShow = result;
     setState ((){
-      _imageToShow = result;
+      if (name == 'cto') {
+        _cto_img = result;
+      } else if (name == 'cto_sig') {
+        _cto_sig_img = result;
+      }
     });
     print('Get path image ${result}, ${name}');
   }
 }
+ Widget img(String image) {
+  if (image != '') {
+    return Image.file(File(image));
+  } else {
+    return Image.asset('assets/images/empty-image.png');
+   }
+ }
